@@ -19,6 +19,7 @@ class GameSceneViewController: UIViewController {
     
     var questionNumber = 0
     var gameSession = GameSession()
+    let newArray = Game.shared.returnRequestedArray()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,15 +56,15 @@ extension GameSceneViewController {
         questionTextLabel.layer.cornerRadius = 10
         questionTextLabel.clipsToBounds = true
         
-        answeredQuestionsCount.text = "\(questionNumber)/\(questionsArray.count)"
+        answeredQuestionsCount.text = "\(questionNumber)/\(Game.shared.questionsArray.count)"
     }
     
     func firstScreenPreparing() {
-        questionTextLabel.text = questionsArray[questionNumber].questionText
-        firstButton.setTitle(questionsArray[questionNumber].answerText1, for: .normal)
-        secondButton.setTitle(questionsArray[questionNumber].answerText2, for: .normal)
-        thirdButton.setTitle(questionsArray[questionNumber].answerText3, for: .normal)
-        fourthButton.setTitle(questionsArray[questionNumber].answerText4, for: .normal)
+        questionTextLabel.text = newArray[questionNumber].questionText
+        firstButton.setTitle(newArray[questionNumber].answerText1, for: .normal)
+        secondButton.setTitle(newArray[questionNumber].answerText2, for: .normal)
+        thirdButton.setTitle(newArray[questionNumber].answerText3, for: .normal)
+        fourthButton.setTitle(newArray[questionNumber].answerText4, for: .normal)
     }
     
     func clickButton (sender: UIButton) {
@@ -71,14 +72,14 @@ extension GameSceneViewController {
         let record = GameSession(answeredQuestionCount: gameSession.answeredQuestionCount, date: Date())
         
         // Правильное нажатие на вопросы кроме последнего
-        if sender.tag == questionsArray[questionNumber].questionsAnswerNumber && questionNumber < questionsArray.count - 1 {
+        if sender.tag == newArray[questionNumber].questionsAnswerNumber && questionNumber < newArray.count - 1 {
             questionNumber += 1
             gameSession.answeredQuestionCount = questionNumber
             viewDidLoad()
 
         // Правильное нажатие на последний вопрос
-        } else if sender.tag == questionsArray[questionNumber].questionsAnswerNumber && questionNumber == (questionsArray.count - 1) {
-            let record = GameSession(answeredQuestionCount: questionsArray.count, date: Date())
+        } else if sender.tag == newArray[questionNumber].questionsAnswerNumber && questionNumber == (newArray.count - 1) {
+            let record = GameSession(answeredQuestionCount: Game.shared.questionsArray.count, date: Date())
             Game.shared.addResult(record: record)
             navigationController?.popViewController(animated: true)
             
